@@ -1,0 +1,57 @@
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="row">
+                <div class="col-6">
+                    <form method="post" action="">
+                        <button class="btn btn-secondary w-100 invisible" type="submit">Něco jinýho</button>
+                    </form>
+                </div>
+                <div class="col-6">
+                    <form method="post" action="">
+                        <button class="btn btn-secondary w-100" type="submit">Přidat Akci/Závod</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom"></div>
+    <div class="row">
+        {% for event in event_list %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <span class="card-title fw-bold" id="event_name">{{ event.Event_date }}</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold" id="Event_name">{{ event.Event_name }}</h5>
+                        <p class="card-text invisible" id="card_event_id" data-eventid="{{ event[0] }}" value="{{ event[0] }}">{{ event[0] }}</p>
+                        <p class="card-text invisible" id="card_event_date" value="{{ event[1] }}">{{ event[1] }}</p>
+                        <p class="card-text invisible" id="card_event_name" value="{{ event[2] }}">{{ event[2] }}</p>
+                        <p class="card-text invisible" id="card_event_badge" value="{{ event[3] }}">{{ event[3] }}</p>
+                        <p class="card-text" id="card_event_organizator" value="{{ event[4] }}">{{ event[4] }}</p>
+                        <p class="card-text" id="card_event_place" value="{{ event[5] }}">{{ event[5] }}</p>
+                        <p class="card-text invisible" id="card_event_final" value="{{ event[6] }}">{{ event[6] }}</p>
+                        <p class="card-text" id="card_event_opened" value="{{ event[7] }}">{{ event[7] }}</p>
+                        <div class="d-flex flex-column align-items-stretch">
+                            <a class="btn btn-success mb-2" onclick="updateFormFieldsEvent()">Editovat</a>
+                            <a class="btn btn-success mb-2" id="update_event_{{ event.IdEvent }}" onClick="">Otevřít přihlášky</a>
+                            <form method="post" action="/admin/get-registrations">
+                                <button class="btn btn-success" type="submit">Registrace .xlsx</button>
+                            </form>
+                        </div>                        
+                    </div>
+                    <div class="card-footer">
+                        <span class="badge rounded-pill bg-warning text-dark">{{ event.Event_badge }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/events.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+<div class="row">
+    <h3 class='align-self-start'>Nový závod</h3>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-12">
+        <form action = "/new-event" method = "POST" enctype = "multipart/form-data">
+        
+        <label for="event_title" class="form-label">Název</label>
+        <div class="d-flex align-items-center">
+            <input class="form-control form-control-lg" id="event_title" name="event_title" type="text" placeholder="Název závodu">
+        </div>
+
+        <label for="event_id" class="form-label">Database ID</label>
+        <div class="d-flex align-items-center">
+            <input class="form-control form-control-sm" id="event_id" name="event_id" type="text" placeholder="Database ID" readonly>
+        </div>
+
+        <label for="event_date" class="form-label">Datum</label>
+        <div class="d-flex align-items-center">
+            <input class="form-control" type="date" name="event_date" id="event_date">
+        </div>
+
+        <label for="event_place" class="form-label">Místo</label>
+        <div class="d-flex align-items-center">
+            <input class="form-control" type="text" placeholder="Místo" name="event_place" id="event_place">
+        </div>
+
+        <label for="event_file_propositions" class="form-label">Propozice</label>
+        <div class="d-flex align-items-center">
+            <input type="file" class="form-control" name="event_file_propositions" id="event_file_propositions" aria-label="Propozice">
+        </div>
+
+        <label for="event_file_results" class="form-label">Výsledky</label>
+        <div class="d-flex align-items-center">
+            <input type="file" class="form-control" name="event_file_results" id="event_file_results" aria-label="Výsledky">
+        </div>
+
+        <label for="event_organizator" class="form-label">Pořádající klub</label>
+        <div class="d-flex align-items-center">
+            <input class="form-control" type="text" placeholder="Pořádající klub" name="event_organizator" id="event_organizator">
+        </div>
+
+        <label for="event_badge" class="form-label">Štítek na kartě závodu</label>
+        <div class="d-flex align-items-center">
+            <select class="form-select" aria-label="Default select example" name="event_badge" id="event_badge">
+                <option value="Otevřené přihlášky">Otevřené přihlášky</option>
+                <option value="Zavřené přihlášky">Zavřené přihlášky</option>
+                <option value="Výsledky k dispozici">Výsledky k dispozici</option>
+                <option value="Finálový závod">Finálový závod</option>
+            </select>
+        </div>
+        <div class="d-flex align-items-center">
+            <input class="form-check-input" type="checkbox" id="event_final" name="event_final" value="1">
+            <label class="form-check-label" for="event_final">Finálový závod</label>
+        </div>
+        <br/>
+        <input type="submit" class="btn btn-primary w-200"></input>
+        </form>
+    </div>
+    <div class="col-lg-6 col-md-12" id="event_list">
+    {% for event in event_list %}
+        <div class="row">
+            <div class="card h-100">
+                <div class="card-header">
+                    <span class="card-title fw-bold" id="event_name">{{ event.Event_date }}</span>
+                </div>                    
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <h5 class="card-title fw-bold" id="Event_name">{{ event.Event_name }}</h5>
+                            <p class="card-text invisible" id="card_event_id" data-eventid="{{ event[0] }}" value="{{ event[0] }}">{{ event[0] }}</p>
+                            <p class="card-text invisible" id="card_event_date" value="{{ event[1] }}">{{ event[1] }}</p>
+                            <p class="card-text invisible" id="card_event_name" value="{{ event[2] }}">{{ event[2] }}</p>
+                            <p class="card-text invisible" id="card_event_badge" value="{{ event[3] }}">{{ event[3] }}</p>
+                            <p class="card-text" id="card_event_organizator" value="{{ event[4] }}">{{ event[4] }}</p>
+                            <p class="card-text" id="card_event_place" value="{{ event[5] }}">{{ event[5] }}</p>
+                            <p class="card-text invisible" id="card_event_final" value="{{ event[6] }}">{{ event[6] }}</p>
+                            <p class="card-text" id="card_event_opened" value="{{ event[7] }}">{{ event[7] }}</p>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <a class="btn btn-success w-100" onclick="updateFormFieldsEvent()">Editovat</a>
+                                </div>
+                                <div class="col-12 mb-2">                                        <a class="btn btn-success w-100" id="update_event_{{ event.IdEvent }}" onClick="">Otevřít přihlášky</a>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <form method="post" action="/admin/get-registrations">
+                                        <input class="invisible" id="event_export_id" name="event_export_id" type="text" readonly value={{ event[0] }} />
+                                        <button class="btn btn-success w-100" type="submit">Registrace .xlsx</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="badge rounded-pill bg-warning text-dark">{{ event.Event_badge }}</span>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/events.js') }}"></script>
+{% endblock %}

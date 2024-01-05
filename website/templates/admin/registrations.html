@@ -1,0 +1,36 @@
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-6">
+        
+    </div>
+    <div class="col-6" id="event_list">
+    {% for event in event_list %}
+        <div class="row">
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <span class="card-title fw-bold" id="event_name">{{ event.Event_date }}</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold" id="Event_name">{{ event.Event_name }}</h5>
+                        <p class="card-text" id="card_event_id" data-eventid="{{ event[0] }}" value="{{ event[0] }}">{{ event[0] }}</p>
+                        <p class="card-text" id="card_event_date" value="{{ event[1] }}">{{ event[1] }}</p>
+                        <p class="card-text" id="card_event_name" value="{{ event[2] }}">{{ event[2] }}</p>
+                        <p class="card-text" id="card_event_badge" value="{{ event[3] }}">{{ event[3] }}</p>
+                        <p class="card-text" id="card_event_opened" value="{{ event[7] }}">{{ event[7] }}</p>
+                        <a class="btn btn-primary" onclick="">Editovat</a>
+                    </div>
+                    <div class="card-footer">
+                        <span class="badge rounded-pill bg-warning text-dark">{{ event.Event_badge }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/events.js') }}"></script>
+{% endblock %}

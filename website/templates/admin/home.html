@@ -1,0 +1,28 @@
+{% extends "admin/admin.html" %}
+ 
+{% block content%}
+<h1 align="center">Přidat oznámení na úvodní stránku</h1>
+
+<form method="POST">
+  <textarea name="note" id="note" class="form-control bg-info"></textarea>
+  <br />
+  <div align="center">
+    <button type="submit" class="btn btn-primary">Add Note</button>
+  </div>
+</form>
+
+<div class="row row-cols-1 g-4" id="notes">
+  {% for note in user.notes %}
+          <div class="card custom-opacity">
+            <div class="card-header">
+              <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+              <div class="card-body">
+                  <p class="card-text">{{ note.data }}</p>
+              </div> 
+          </div>
+  {% endfor %}
+</div>
+{% endblock %}

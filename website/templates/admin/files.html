@@ -1,0 +1,37 @@
+{% extends 'admin/admin.html' %}
+
+{% block content %}
+
+    <div class="col-6">
+        <form action = "/files" method = "POST" enctype = "multipart/form-data">
+        <h3 class='align-self-start'>Vložit dokument</h3>
+
+        <div class="mb-3">  
+            <label for="general_file" class="form-label">Dokument</label>
+            <input type="file" class="form-control" name="general_file" id="general_file" aria-label="Dokument">  
+        </div>
+
+        <div class="mb-3">
+            <label for="file_description" class="form-label invisible">Popis dokumentu</label>
+            <input class="form-control form-control-lg invisible" id="file_description" name="file_description" type="text" placeholder="Detaily k dokumentu">
+        </div>
+
+        <div class="mb-3">
+            <label for="file_category" class="form-label">Kategorie Dokumentu</label>
+            <select class="form-select" aria-label="Default select example" name="file_category" id="file_category">
+                <option value="Otevřené přihlášky">Ostatní dokumenty</option>
+                <option value="Zavřené přihlášky">Pravidla</option>
+                <option value="Výsledky k dispozici">Výsledky</option>
+                <option value="Finálový závod">Celkové Výsledky</option>
+            </select>
+        </div>
+
+        <br/>
+        <input type="submit" class="btn btn-primary"></input>
+        </form>
+    </div>
+    <div class="col-6">
+        
+
+    </div>
+{% endblock %}

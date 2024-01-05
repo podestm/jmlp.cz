@@ -1,0 +1,6 @@
+uploads
+.vscode
+python310env
+python311env
+website/__pycache__
+website/database.db

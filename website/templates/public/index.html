@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-md text-center my-5">
+    <div class="row">
+        <div class="col-12 col-md-2">
+            <img src="static/images/blue.png" alt="Blue Image" class="img-fluid" width="300">
+        </div>
+        <div class="col-12 col-md-8">
+            <h1 class="display-1 fw-bold">JIHOMORAVSKÝ LYŽAŘSKÝ POHÁR</h1>
+        </div>
+        <div class="col-12 col-md-2">
+            <img src="static/images/red.png" alt="Red Image" class="img-fluid mirror-image" width="300">
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <h2></h2>
+    <div class="row row-cols-1 g-4" id="notes">
+        {% for note in notes %}
+            <div class="col">
+                <div class="card custom-opacity shadow">
+                    <div class="card-body">
+                        <p class="card-text">{{ note.data }}</p>
+                    </div> 
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <br>
+    <h2 class="mb-4">Vypsané Soutěže</h2>
+    <div class="container mt-3">
+        <div class="row">
+            {% for card in cards %}
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-lg">
+                        <div class="card-body">
+                            <h5 class="card-title display-5 event-name">{{ card.event_name }}</h5>
+                            <h6 class="card-title">{{ card.event_date }}</h6>
+                            <br>
+                            <h5 class="card-title">{{ card.event_place }}</h5>
+                            <p class="card-text propositions-file invisible">{{ card.propositions_file }}</p>
+                            <p class="card-text results-file invisible">{{ card.results_file }}</p>
+                            <a href="/registration" class="btn btn-primary {{ 'invisible' if not card.show_button }}" onclick="storeHeadingValue(this)">Registrovat</a>
+                        </div>
+                        <div class="card-footer">
+                            {% if card.event_closed %}
+                            <span class="badge rounded-pill bg-danger text-dark">Přihlášky Zavřené</span>
+                            {% else %}
+                            <span class="badge rounded-pill bg-success text-dark">Přihlášky Otevřené</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <hr>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{% endblock %}

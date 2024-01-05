@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %} 
+{% if messages %} 
+{% for category, message in messages %} 
+{% if category =='error' %}
+<div class="alert alert-danger alter-dismissable fade show" role="alert">
+  {{ message }}
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% else %}
+<div class="alert alert-success alter-dismissable fade show" role="alert">
+  {{ message }}
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %} {% endfor %} {% endif %} {% endwith %}
+
+
+
+<div class="container mt-5 text-center">
+    <h1 id="event_title" class="mb-4"></h1>
+    <button id="propositions_download" onclick="">Propozice</button>
+    <button id="results_download" onclick="">Výsledky</button>
+
+</div>
+<div class="container">
+    <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control mb-3" placeholder="Hledej příjmení">
+                <select name="racers" id="racers" size="7" class="form-select mb-3">
+                    {% for racer in racer_list %}
+                        <option value="{{ racer.firstName }}!{{ racer.lastName }}!{{ racer.birthYear }}!{{ racer.teamName }}!{{ racer.gender }}">{{ racer.firstName }} {{ racer.lastName }} {{ racer.birthYear }}</option>
+                    {% endfor %}
+                </select>
+                <form action='/registration' method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="event_name" class="form-label invisible">Závod</label>
+                            <input type="text" id="event_name" name="event_name" class="form-control mb-3 invisible" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="racer_firstName" class="form-label">Jméno</label>
+                            <input type="text" id="racer_firstName" name="racer_firstName" class="form-control mb-3" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="racer_lastName" class="form-label">Příjmení</label>
+                            <input type="text" id="racer_lastName" name="racer_lastName" class="form-control mb-3" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="racer_birthYear" class="form-label">Rok narození</label>
+                            <input type="text" id="racer_birthYear" name="racer_birthYear" class="form-control mb-3" required>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="racer_gender" class="form-label">Pohlaví</label>
+                        <select id="racer_gender" name="racer_gender" class="form-select mb-3" required>
+                            <option value="Žena">Žena</option>
+                            <option value="Muž">Muž</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="racer_teamName" class="form-label">Klub</label>
+                            <select class="form-select mb-3" name="racer_teamName" id="racer_teamName" placeholder="Vyber Klub" onchange="toggleNewTeamInput()">
+                                <option value="AddNewTeam">--Přidat Nový Klub--</option>
+                                {% for team in teams %}    
+                                    <option value="{{ team[0] }}">{{ team[0] }}</option>
+                                {% endfor %}
+                                <option value="AddNewTeam">--Přidat Nový Klub--</option>
+                            </select>
+                        </div>
+                        <div class="col-6" id="newTeamInput" style="display:none;">
+                            <label for="racer_teamName" class="form-label">Název nového klubu</label>
+                            <input type="text" id="racer_newTeam" name="racer_newTeam" class="form-control mb-3">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="racer_email" class="form-label">Email</label>
+                        <input type="email" id="racer_email" name="racer_email" class="form-control mb-3">
+                    </div>
+                    <div class="col-12">
+                        <input type="submit" value="Submit" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        
+    </div>
+</div>
+
+
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+{% endblock %}

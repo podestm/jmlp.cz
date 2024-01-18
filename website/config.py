@@ -6,6 +6,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = 'uploads'
     REGISTRATIONS_FOLDER = 'registrations'
+    IMAGES_FOLDER = 'uploads\\posts-images'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
     DB_NAME = "jmlp_test"
     

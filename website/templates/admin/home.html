@@ -3,26 +3,41 @@
 {% block content%}
 <h1 align="center">Přidat oznámení na úvodní stránku</h1>
 
-<form method="POST">
-  <textarea name="note" id="note" class="form-control bg-info"></textarea>
-  <br />
-  <div align="center">
+<form method="POST" enctype="multipart/form-data">
+  <div class="col-md-5">
+    <label for="post_title" class="form-label">Titulek</label>
+    <input type="text" id="post_title" name="post_title" class="form-control mb-3" required>
+  </div>
+  <div class="col-md-5">
+    <textarea name="note" id="note" class="form-control bg-info"></textarea>
+  </div>
+  <br>
+  <div class="col-md-5" align="center">
     <button type="submit" class="btn btn-primary">Add Note</button>
   </div>
 </form>
 
 <div class="row row-cols-1 g-4" id="notes">
-  {% for note in user.notes %}
-          <div class="card custom-opacity">
-            <div class="card-header">
-              <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-              <div class="card-body">
-                  <p class="card-text">{{ note.data }}</p>
-              </div> 
-          </div>
+  {% for card in blog_posts %}
+  <div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-8">
+        <div class="card-body">
+          <button type="button" class="close" onClick="deleteNote({{ card.note_id }})">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="card-title">{{ card.note_title }}</h5>
+          <p class="card-text">{{ card.note_data }}</p>
+          <p class="card-text"><small class="text-body-secondary">{{ card.note_date }}</small></p>
+        </div>
+      </div>
+      {% if card.note_image %}
+      <div class="col-md-4">
+        <img src="{{ card.image_url }}" class="img-fluid rounded-start" alt="{{ card.image_url }}">
+      </div>
+      {% endif%}
+    </div>
+  </div>
   {% endfor %}
 </div>
 {% endblock %}

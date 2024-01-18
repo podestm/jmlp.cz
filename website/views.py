@@ -32,9 +32,20 @@ def index():
         for event in events
     ]
     
-    notes = Note.query.with_entities(Note.data).all()
+    posts = Note.query.all()
+    blog_posts = [{'data': post,
+                   'note_title': post.name,
+                   'note_id': post.id,
+                   'note_data': post.data,
+                   'note_date': post.date,
+                   'note_type': post.Note_type,
+                   'note_image': post.Note_image_url != None,
+                   'image_url': post.Note_image_url
+                   } 
+            for post in posts
+    ]
     
-    return render_template('public/index.html', user=current_user, event_list=events, notes=notes, cards=cards)
+    return render_template('public/index.html', user=current_user, event_list=events, blog_posts=blog_posts, cards=cards)
 
 
 

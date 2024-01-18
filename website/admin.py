@@ -12,20 +12,37 @@ from functions import process_upload_file, set_season
 admin = Blueprint('admin', __name__)
 
 
+
+
 @admin.route('/', methods=['GET', 'POST'])
 @login_required
-def home():    
+def home():
+    posts = Note.query.all()
+    blog_posts = [{'data': post,
+                   'note_title': post.name,
+                   'note_id': post.id,
+                   'note_data': post.data,
+                   'note_date': post.date,
+                   'note_type': post.Note_type,
+                   'note_image': post.Note_image_url != None,
+                   'image_url': post.Note_image_url
+                   } 
+            for post in posts
+    ]
+        
     if request.method == 'POST': 
         note = request.form.get('note')
+        title = request.form.get('post_title')
+        post_date = None
 
         if len(note) < 1:
             flash('Note is too short!', category='error') 
         else:
-            new_note = Note(data=note, user_id=current_user.id) 
+            new_note = Note(data=note, user_id=current_user.id, name=title) 
             db.session.add(new_note)
             db.session.commit()
-            flash('Note added!', category='success')
-    return render_template('admin/home.html', user=current_user,)
+            return redirect(url_for('admin.home'))
+    return render_template('admin/home.html', user=current_user, blog_posts=blog_posts)
 
 
 
@@ -114,25 +131,6 @@ def file_upload():
         db.session.commit()
     
     return render_template('admin/files.html', user=current_user)
-
-
-
-
-@admin.route('/notes', methods=['GET', 'POST'])
-@login_required
-def notes():
-    if request.method == 'POST': 
-        note = request.form.get('note')
-
-        if len(note) < 1:
-            flash('Note is too short!', category='error') 
-        else:
-            new_note = Note(data=note, user_id=current_user.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added!', category='success')
-
-    return render_template("admin/home.html", user=current_user)
 
 
 

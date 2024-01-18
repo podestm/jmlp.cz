@@ -15,6 +15,6 @@ function updateEvent(eventId) {
       method: "POST",
       body: JSON.stringify({ eventId: eventId }),
     }).then((_res) => {
-      window.location.href = "/new-event";
+      window.location.href = "/admin/new-event";
     });
   }

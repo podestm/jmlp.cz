@@ -6,7 +6,7 @@
 </div>
 <div class="row">
     <div class="col-lg-6 col-md-12">
-        <form action = "/new-event" method = "POST" enctype = "multipart/form-data">
+        <form action = "/admin/new-event" method = "POST" enctype = "multipart/form-data">
         
         <label for="event_title" class="form-label">Název</label>
         <div class="d-flex align-items-center">
@@ -46,8 +46,6 @@
         <label for="event_badge" class="form-label">Štítek na kartě závodu</label>
         <div class="d-flex align-items-center">
             <select class="form-select" aria-label="Default select example" name="event_badge" id="event_badge">
-                <option value="Otevřené přihlášky">Otevřené přihlášky</option>
-                <option value="Zavřené přihlášky">Zavřené přihlášky</option>
                 <option value="Výsledky k dispozici">Výsledky k dispozici</option>
                 <option value="Finálový závod">Finálový závod</option>
             </select>
@@ -85,12 +83,13 @@
                                 <div class="col-12 mb-2">
                                     <a class="btn btn-success w-100" onclick="updateFormFieldsEvent()">Editovat</a>
                                 </div>
-                                <div class="col-12 mb-2">                                        <a class="btn btn-success w-100" id="update_event_{{ event.IdEvent }}" onClick="">Otevřít přihlášky</a>
+                                <div class="col-12 mb-2">                                        
+                                    <a class="btn btn-success w-100" id="update_event_{{ event.IdEvent }}" onClick="">Otevřít přihlášky</a>
                                 </div>
                                 <div class="col-12 mb-2">
                                     <form method="post" action="/admin/get-registrations">
-                                        <input class="invisible" id="event_export_id" name="event_export_id" type="text" readonly value={{ event[0] }} />
-                                        <button class="btn btn-success w-100" type="submit">Registrace .xlsx</button>
+                                        <input class="invisible" id="event_export_id" name="event_export_id" type="text" readonly value={{ event[0] }}/>
+                                        <button class="btn btn-success w-100" type="submit">Registrace.xlsx</button>
                                     </form>
                                 </div>
                             </div>

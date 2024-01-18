@@ -37,6 +37,7 @@ class Event(db.Model):
     Event_time = db.Column(db.Time)
     Event_place = db.Column(db.String(150))
     Event_final = db.Column(db.Integer)
+    Event_season = db.Column(db.String(10))
     Results_file_name = db.Column(db.String(100))
     Results_file_ext = db.Column(db.String(10))
     Results_file_url = db.Column(db.String(100))

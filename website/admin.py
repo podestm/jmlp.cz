@@ -7,6 +7,7 @@ import pandas as pd
 from models import Note, Event, Racer,EventHasRacer, File, Team
 from config import db
 import json
+from functions import process_upload_file, set_season
 
 admin = Blueprint('admin', __name__)
 
@@ -27,12 +28,17 @@ def home():
     return render_template('admin/home.html', user=current_user,)
 
 
+
+
 @admin.route('/events', methods=['GET', 'POST'])
 @login_required
 def events():
 
     event_list = Event.query.with_entities(Event.IdEvent,Event.Event_date,Event.Event_name,Event.Event_badge, Event.Event_organizator, Event.Event_place, Event.Event_final, Event.Event_opened).order_by(Event.Event_date).all()
     return render_template('admin/events.html', user=current_user, event_list=event_list)
+
+
+
 
 @admin.route('/get-registrations', methods=['GET', 'POST'])
 @login_required
@@ -66,6 +72,7 @@ def get_registrations():
 
 
 
+
 @admin.route('/open-event', methods=['GET', 'POST'])
 @login_required
 def open_event():
@@ -80,6 +87,7 @@ def open_event():
         return {'message': 'Event_opened updated successfully'}, 200
     else:
         return {'error': 'Event not found'}, 404
+
 
 
 
@@ -109,6 +117,7 @@ def file_upload():
 
 
 
+
 @admin.route('/notes', methods=['GET', 'POST'])
 @login_required
 def notes():
@@ -127,6 +136,7 @@ def notes():
 
 
 
+
 @admin.route('/delete-note', methods=['POST'])
 def delete_note():  
     note = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
@@ -138,3 +148,84 @@ def delete_note():
             db.session.commit()
 
     return jsonify({})
+
+
+
+
+@admin.route('/new-event', methods=['GET', 'POST'])
+@login_required
+def add_event():
+    
+    if request.method == 'POST':
+        event_id = request.form.get('event_id')
+        event_title = request.form.get('event_title')
+        event_date = request.form.get('event_date')
+        event_place = request.form.get('event_place')
+        event_is_final = 1 if 'event_final' in request.form else 0
+        event_badge = request.form.get('event_badge')
+        event_organizator = request.form.get('event_organizator')
+        event_file_propositions = request.files['event_file_propositions']
+        event_file_results = request.files['event_file_results']
+
+        existing_event = Event.query.filter(Event.IdEvent == event_id).first()
+        
+        if existing_event:
+            prop_file_name, prop_file_url = process_upload_file(event_file_propositions, event_date, current_app.config['UPLOAD_FOLDER'])
+            results_file_name, results_file_url = process_upload_file(event_file_results, event_date, current_app.config['UPLOAD_FOLDER'])
+            event_season = set_season(event_date)
+            
+            event_update = Event(Event_name=event_title,
+                                Event_date=event_date,
+                                Event_place=event_place,
+                                Event_final=event_is_final,
+                                Event_season=event_season,
+                                Results_file_name=results_file_name,
+                                Results_file_url=results_file_url,
+                                Propositions_file_name=prop_file_name,
+                                Propositions_file_url=prop_file_url,
+                                Event_organizator=event_organizator,
+                                Event_badge=event_badge)
+
+            inspector = inspect(Event)
+            primary_key_name = inspector.primary_key[0].name
+            # Construct the update dictionary
+            event_update_dict = {}
+            for attribute in inspector.attrs:
+                attribute_name = attribute.key
+                #check for primary key and exculde it from dictioanry
+                if attribute_name != primary_key_name:
+                    variable_name = f"{attribute_name}"
+                    # Check if the variable exists and is not None
+                    if hasattr(event_update, variable_name):
+                        value = getattr(event_update, variable_name)
+                        
+                        if value is not None:
+                            event_update_dict[attribute_name] = value
+                            
+            # Update the event with a specific IdEvent
+            db.session.query(Event).filter(Event.IdEvent == event_id).update(event_update_dict)
+            db.session.commit()
+            
+        else:   
+            prop_file_name, prop_file_url = process_upload_file(event_file_propositions, event_date, current_app.config['UPLOAD_FOLDER'])
+            results_file_name, results_file_url = process_upload_file(event_file_results, event_date, current_app.config['UPLOAD_FOLDER'])
+            event_season = set_season(event_date)    
+            
+            new_event = Event(Event_name=event_title,
+                                Event_date=event_date,
+                                Event_place=event_place,
+                                Event_final=event_is_final,
+                                Event_season=event_season,
+                                Propositions_file_name=prop_file_name,
+                                Propositions_file_url=prop_file_url,
+                                Results_file_name=results_file_name,
+                                Results_file_url=results_file_url,
+                                Event_organizator=event_organizator,
+                                Event_badge=event_badge,
+                                Event_opened=0)
+            
+            db.session.add(new_event)
+            db.session.commit()
+            
+    event_list = Event.query.with_entities(Event.IdEvent,Event.Event_date,Event.Event_name,Event.Event_badge, Event.Event_organizator, Event.Event_place, Event.Event_final, Event.Event_opened).order_by(Event.Event_date).all()    
+    return render_template('admin/new_event.html', user=current_user, event_list=event_list)

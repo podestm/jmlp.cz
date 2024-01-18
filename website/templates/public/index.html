@@ -34,7 +34,8 @@
         <div class="row">
             {% for card in cards %}
                 <div class="col-md-4 mb-3">
-                    <div class="card h-100 shadow-lg">
+                    <div class="card shadow-lg h-200">
+                        <a href="{{ url_for('views.register', event_id=card.event_id) }}"class="text-decoration-none text-reset">
                         <div class="card-body">
                             <h5 class="card-title display-5 event-name">{{ card.event_name }}</h5>
                             <h6 class="card-title">{{ card.event_date }}</h6>
@@ -42,7 +43,7 @@
                             <h5 class="card-title">{{ card.event_place }}</h5>
                             <p class="card-text propositions-file invisible">{{ card.propositions_file }}</p>
                             <p class="card-text results-file invisible">{{ card.results_file }}</p>
-                            <a href="/registration" class="btn btn-primary {{ 'invisible' if not card.show_button }}" onclick="storeHeadingValue(this)">Registrovat</a>
+                            <div class="mt-auto"></div>
                         </div>
                         <div class="card-footer">
                             {% if card.event_closed %}
@@ -51,8 +52,9 @@
                             <span class="badge rounded-pill bg-success text-dark">Přihlášky Otevřené</span>
                             {% endif %}
                         </div>
+                        </a>
                     </div>
-                </div>
+                </div>   
             {% endfor %}
         </div>
     </div>
